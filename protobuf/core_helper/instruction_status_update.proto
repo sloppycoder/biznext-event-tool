@@ -1,0 +1,43 @@
+syntax = "proto3";
+package th.co.ktb.biznext.channel.common;
+
+option java_outer_classname = "InstructionStatusUpdateProtobuf";
+
+message InstructionStatusUpdate {
+  message Header {
+    string userRefId = 1;
+    string corporateRefId = 2;
+    string correlationId = 3;
+    string channel = 4;
+    string createdDateTime = 5;
+
+  }
+
+  message Data {
+    string instructionRefNo = 1;
+    string subInstructionRefNo = 2;
+    string status = 3;
+    string legacyRefNo = 4;
+    string sourceOrderId = 5;
+    string errorCode = 6;
+    int32 numberOfBulkItemExecutionSuccess = 7;
+    int32 numberOfBulkItemExecutionFailed = 8;
+    string isRecurringInProgress = 9;
+    repeated BulkFailedRecord bulkFailedRecords = 10;
+    string overallRecurringStatus = 11;
+    string sourceStatusCode = 12;
+    string reason = 13;
+    string reasonNote = 14;
+    int32 overallRecurringNumberOfBulkItemExecutionSuccess = 15;
+    int32 overallRecurringNumberOfBulkItemExecutionFailed = 16;
+    int32 overallRecurringNumberOfBulkItemExecutionPartiallySuccess = 17;
+  }
+
+  message BulkFailedRecord {
+    string paymentReferenceNo = 1;
+    string code = 2;
+    string description = 3;
+  }
+  Header header = 1;
+  Data data = 2;
+}

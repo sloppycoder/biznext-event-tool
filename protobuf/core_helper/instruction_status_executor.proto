@@ -1,0 +1,36 @@
+syntax = "proto3";
+package th.co.ktb.biznext.channel.common;
+
+option java_outer_classname = "InstructionStatusExecutorProtobuf";
+
+message InstructionStatusExecutor {
+  message Header {
+    string userRefId = 1;
+    string corporateRefId = 2;
+    string correlationId = 4;
+    string channel = 5;
+    string createdDateTime = 6;
+    string userId = 7;
+    string eventType = 8;
+  }
+
+  message Data {
+    string instructionRefNo = 1;
+    string instructionType = 2;
+    string status = 3;
+    string sourceOrderId = 4;
+    string subInstructionRefNo = 5;
+    repeated UserInformation makers = 6;
+    repeated UserInformation approvers = 7;
+    repeated UserInformation reviewers = 8;
+    string sourceApprovalRequestRefId = 9;
+    string sourceEditedApprovalRequestRefId = 10;
+  }
+
+  message UserInformation {
+    string userId = 1;
+    string userRefId = 2;
+  }
+  Header header = 1;
+  Data data = 2;
+}

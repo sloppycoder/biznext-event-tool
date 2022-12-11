@@ -1,0 +1,9 @@
+syntax = "proto3";
+package th.co.ktb.biznext.channel.common;
+
+option java_outer_classname = "DecimalProtobuf";
+
+message Decimal {
+  bytes unscaledVal = 1;
+  int32 scale = 2;
+}

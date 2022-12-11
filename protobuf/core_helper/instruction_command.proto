@@ -1,0 +1,79 @@
+syntax = "proto3";
+package th.co.ktb.biznext.channel.common;
+
+option java_outer_classname = "InstructionCommandProtobuf";
+
+message InstructionCommand {
+  message Header {
+    string userRefId = 1;
+    string corporateRefId = 2;
+    string role = 3;
+    string channel = 4;
+    string correlationId = 5;
+    string eventType = 6;
+    string userId = 7;
+  }
+
+  message PayeeInformation {
+    string name = 1;
+    string accountNo = 2;
+    string bankName = 3;
+    string billerNo = 4;
+    string ref1 = 5;
+    string favoriteBillerRefId = 6;
+  }
+
+  message PayerInformation {
+    string nameTh = 1;
+    string nameEn = 2;
+    string accountNo = 3;
+  }
+
+  message FinancialDetails {
+    message Amount {
+      string amount = 1;
+      string currency = 2;
+    }
+    string subInstructionRefNo = 1;
+    string transactionItemId = 2;
+    string datetime = 3;
+    string subService = 4;
+    Amount amount = 5;
+    string fromAccountNo = 6;
+    string billerRefId = 7;
+    string isRecurringTransaction = 8;
+  }
+
+  message FinancialDetailSummary {
+    message Amount {
+      string amount = 1;
+      string currency = 2;
+    }
+    string subService = 1;
+    Amount amount = 2;
+  }
+
+  message Data {
+    string datetime = 1;
+    string service = 2;
+    repeated string subService = 3;
+    string instructionType = 4;
+    string instructionRefNo = 5;
+    PayeeInformation payeeInformation = 6;
+    PayerInformation payerInformation = 7;
+    repeated FinancialDetails financialDetails = 8;
+    string currencyCode = 9;
+    string amount = 10;
+    string note = 11;
+    bool isWht = 12;
+    string sourceOrderId = 13;
+    repeated string discardedSourceOrderIds = 14;
+    string metadata = 15;
+    int32 numberOfTransactions = 16;
+    repeated FinancialDetailSummary financialDetailSummary = 17;
+    string isRecurringTransaction = 18;
+    string billerRefId = 19;
+  }
+  Header header = 1;
+  Data data = 2;
+}
