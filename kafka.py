@@ -1,6 +1,7 @@
 import os
 import sys
 from datetime import datetime
+from typing import Any
 from uuid import uuid4
 
 from confluent_kafka import Consumer, Producer
@@ -20,7 +21,11 @@ TYPES_MAP = {
 bootstrap_servers = os.environ.get("BOOTSTRAP_SERVERS", "localhost:9092")
 
 
-def consumer_conf(group_id="test-tool-consumer-1", servers=bootstrap_servers):
+def is_known_topic(topic: str) -> bool:
+    return topic in TYPES_MAP
+
+
+def consumer_conf(group_id: str = "test-tool-consumer-1", servers: str = bootstrap_servers):
     return {
         "bootstrap.servers": servers,
         "group.id": group_id,
@@ -30,16 +35,22 @@ def consumer_conf(group_id="test-tool-consumer-1", servers=bootstrap_servers):
     }
 
 
-def producer_conf(servers=bootstrap_servers):
+def producer_conf(servers: str = bootstrap_servers):
     return {"bootstrap.servers": servers}
 
 
-def json2protobuf(topic: str, json_file: str):
-    with open(json_file, "r") as f:
-        json = "".join(f.readlines())
-        obj = TYPES_MAP[topic]()
-        obj = json_format.Parse(json, obj)
-        return obj
+# def json2protobuf(topic: str, json_file: str):
+#     with open(json_file, "r") as f:
+#         json = "".join(f.readlines())
+#         obj = TYPES_MAP[topic]()
+#         obj = json_format.Parse(json, obj)
+#         return obj
+
+
+def json2protobuf(topic: str, json_str: str):
+    obj = TYPES_MAP[topic]()
+    obj = json_format.Parse(json_str, obj)
+    return obj
 
 
 def protobuf2json(topic: str, message: str):
@@ -51,7 +62,10 @@ def protobuf2json(topic: str, message: str):
         return message
 
 
-def produce(conf: dict, topic: str, message) -> None:
+def produce(conf: dict, topic: str, message: Any) -> None:
+    if not conf:
+        conf = producer_conf()
+
     producer = Producer(conf)
     producer.produce(
         topic,
@@ -109,7 +123,7 @@ if __name__ == "__main__":
         # unless -f is specified
         duration = 30
         if len(sys.argv) > 3 and sys.argv[3] == "-f":
-            duration = 100000
+            duration = sys.maxsize
 
         topic = sys.argv[2]
         for _, message in consume(consumer_conf(), topic, duration):
@@ -119,6 +133,8 @@ if __name__ == "__main__":
                 print(f"*** f{message}")
     else:
         topic = sys.argv[1]
-        message = json2protobuf(topic, sys.argv[2])
-        print(f"publishing:...\n{json_format.MessageToJson(message)}")
-        produce(producer_conf(), topic, message)
+        with open(sys.argv[2], "r") as f:
+            json_str = f.read()
+            message = json2protobuf(topic, json_str)
+            print(f"publishing:...\n{json_format.MessageToJson(message)}")
+            produce(producer_conf(), topic, message)
