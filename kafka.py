@@ -19,6 +19,7 @@ TYPES_MAP = {
 }
 
 bootstrap_servers = os.environ.get("BOOTSTRAP_SERVERS", "localhost:9092")
+print(f"bootstrap_servers={bootstrap_servers}")
 
 
 def is_known_topic(topic: str) -> bool:
@@ -37,14 +38,6 @@ def consumer_conf(group_id: str = "test-tool-consumer-1", servers: str = bootstr
 
 def producer_conf(servers: str = bootstrap_servers):
     return {"bootstrap.servers": servers}
-
-
-# def json2protobuf(topic: str, json_file: str):
-#     with open(json_file, "r") as f:
-#         json = "".join(f.readlines())
-#         obj = TYPES_MAP[topic]()
-#         obj = json_format.Parse(json, obj)
-#         return obj
 
 
 def json2protobuf(topic: str, json_str: str):
