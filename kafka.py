@@ -19,15 +19,19 @@ TYPES_MAP = {
 
 bootstrap_servers = os.environ.get("BOOTSTRAP_SERVERS", "localhost:9092")
 
-consumer_conf = {
-    "bootstrap.servers": bootstrap_servers,
-    "group.id": "test-tool-consumer-1",
-    "session.timeout.ms": 6000,
-    "auto.offset.reset": "earliest",
-    "enable.auto.offset.store": False,
-}
 
-producer_conf = {"bootstrap.servers": bootstrap_servers}
+def consumer_conf(group_id="test-tool-consumer-1", servers=bootstrap_servers):
+    return {
+        "bootstrap.servers": servers,
+        "group.id": group_id,
+        "session.timeout.ms": 6000,
+        "auto.offset.reset": "earliest",
+        "enable.auto.offset.store": False,
+    }
+
+
+def producer_conf(servers=bootstrap_servers):
+    return {"bootstrap.servers": servers}
 
 
 def json2protobuf(topic: str, json_file: str):
@@ -88,12 +92,6 @@ def consume(conf: dict, topic: str, duration: int = 3):
         consumer.close()
 
 
-def dummy_payload() -> InstructionCommand:
-    return InstructionCommand(
-        data=InstructionCommand.Data(service="some_service", note=f"generated at {datetime.now().isoformat()}"),
-    )
-
-
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print(
@@ -114,7 +112,7 @@ if __name__ == "__main__":
             duration = 100000
 
         topic = sys.argv[2]
-        for _, message in consume(consumer_conf, topic, duration):
+        for _, message in consume(consumer_conf(), topic, duration):
             try:
                 print(json_format.MessageToJson(message))
             except DecodeError:
@@ -123,4 +121,4 @@ if __name__ == "__main__":
         topic = sys.argv[1]
         message = json2protobuf(topic, sys.argv[2])
         print(f"publishing:...\n{json_format.MessageToJson(message)}")
-        produce(producer_conf, topic, message)
+        produce(producer_conf(), topic, message)
