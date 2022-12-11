@@ -1,0 +1,23 @@
+{
+  "header": {
+    "userRefId": "c3f74cd9-6a40-4345-9245-2a1a6e2e3e36",
+    "corporateRefId": "4f45b0ac-901e-4ddd-9035-f3f627e48f44",
+    "correlationId": "EIPP-1521-TEST-6",
+    "channel": "BN",
+    "createdDateTime": "2022-12-11T02:20:54.918772+07:00[Asia/Bangkok]",
+    "userId": "SUPER01",
+    "eventType": "EXECUTE"
+  },
+  "data": {
+    "instructionRefNo": "20221211082000000015",
+    "instructionType": "EIPP_PROMPTBIZ_INVOICE_CREATION",
+    "status": "EXECUTE",
+    "sourceOrderId": "072627ce-62a3-4c1f-9586-1b14200e14e8",
+    "makers": [
+      {
+        "userId": "SUPER01",
+        "userRefId": "c3f74cd9-6a40-4345-9245-2a1a6e2e3e36"
+      }
+    ]
+  }
+}

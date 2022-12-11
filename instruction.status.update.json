@@ -1,0 +1,14 @@
+{
+  "header": {
+    "corporateRefId": "4f45b0ac-901e-4ddd-9035-f3f627e48f44",
+    "correlationId": "278ac6b2-8f14-4889-b7ce-71d4b01b9c8b",
+    "channel": "MB",
+    "createdDateTime": "2022-12-11T01:49:36.593359+07:00[Asia/Bangkok]"
+  },
+  "data": {
+    "instructionRefNo": "20221211082000000008",
+    "status": "SUBMITTED_FOR_PROCESSING",
+    "sourceOrderId": "08eb9600-d7a6-4190-a5cd-d11b9d0c6f73",
+    "isRecurringInProgress": "FALSE"
+  }
+}

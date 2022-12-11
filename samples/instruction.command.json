@@ -1,0 +1,31 @@
+{
+  "header": {
+    "userRefId": "c3f74cd9-6a40-4345-9245-2a1a6e2e3e36",
+    "corporateRefId": "4f45b0ac-901e-4ddd-9035-f3f627e48f44",
+    "role": "SUPER_USER",
+    "channel": "WB",
+    "correlationId": "b29de212-8705-4805-ac45-c11d64c4b6c1-crid",
+    "eventType": "CREATED",
+    "userId": "SUPER01"
+  },
+  "data": {
+    "datetime": "2022-12-11T11:38:57.089+07:00",
+    "service": "EIPP",
+    "subService": [
+      "EIPP_PROMPTBIZ_SELLER_INVOICE_CREATION"
+    ],
+    "instructionType": "EIPP_PROMPTBIZ_INVOICE_CREATION",
+    "payeeInformation": {
+      "name": "Company A",
+      "accountNo": "012345678901500002"
+    },
+    "payerInformation": {
+      "nameTh": "Company A",
+      "nameEn": "Company A",
+      "accountNo": "012345678901500002"
+    },
+    "currencyCode": "THB",
+    "sourceOrderId": "78122e4b-6bca-4988-bddc-b308126f2a6b",
+    "isRecurringTransaction": "false"
+  }
+}
