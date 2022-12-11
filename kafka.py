@@ -1,3 +1,4 @@
+import os
 import sys
 from datetime import datetime
 from uuid import uuid4
@@ -12,11 +13,11 @@ from models.core_helper.instruction_status_update_pb2 import InstructionStatusUp
 
 TYPES_MAP = {
     "instruction.command": InstructionCommand,
-    "instruction_status_executor": InstructionStatusExecutor,
-    "instruction_status_update": InstructionStatusUpdate,
+    "instruction.status.executor": InstructionStatusExecutor,
+    "instruction.status.update": InstructionStatusUpdate,
 }
 
-bootstrap_servers = "localhost:9092"
+bootstrap_servers = os.environ.get("BOOTSTRAP_SERVERS", "localhost:9092")
 
 consumer_conf = {
     "bootstrap.servers": bootstrap_servers,
@@ -26,9 +27,7 @@ consumer_conf = {
     "enable.auto.offset.store": False,
 }
 
-producer_conf = {
-    "bootstrap.servers": bootstrap_servers,
-}
+producer_conf = {"bootstrap.servers": bootstrap_servers}
 
 
 def json2protobuf(topic: str, json_file: str):
@@ -101,15 +100,21 @@ if __name__ == "__main__":
             """
 
         kafka.py <topic> <json_file>
-        kafka.py consume <topic>
+        kafka.py consume <topic> <-f>
 
         """
         )
         sys.exit(-1)
 
     if sys.argv[1] == "consume":
+        # listen on the topic for 30 by default
+        # unless -f is specified
+        duration = 30
+        if len(sys.argv) > 3 and sys.argv[3] == "-f":
+            duration = 100000
+
         topic = sys.argv[2]
-        for _, message in consume(consumer_conf, topic):
+        for _, message in consume(consumer_conf, topic, duration):
             try:
                 print(json_format.MessageToJson(message))
             except DecodeError:
