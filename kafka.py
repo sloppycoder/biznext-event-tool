@@ -39,13 +39,13 @@ def json2protobuf(topic: str, json_file: str):
         return obj
 
 
-def protobuf2json(topic: str, json_str: str):
+def protobuf2json(topic: str, message: str):
     try:
         obj = TYPES_MAP[topic]()
-        obj.ParseFromString(json_str)
+        obj.ParseFromString(message)
         return obj
     except KeyError:
-        return json_str
+        return message
 
 
 def produce(conf: dict, topic: str, message) -> None:
@@ -56,7 +56,6 @@ def produce(conf: dict, topic: str, message) -> None:
         value=message.SerializeToString(),
     )
     producer.flush()
-    # producer.close()
 
 
 def consume(conf: dict, topic: str, duration: int = 3):

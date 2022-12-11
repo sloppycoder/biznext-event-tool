@@ -1,7 +1,5 @@
-import os
-
 from bn_event_tool import A
 
 
-def test_stack_created():
+def test_created():
     assert A()
