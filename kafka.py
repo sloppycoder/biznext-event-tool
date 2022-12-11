@@ -18,15 +18,13 @@ TYPES_MAP = {
     "instruction.status.update": InstructionStatusUpdate,
 }
 
-bootstrap_servers = os.environ.get("BOOTSTRAP_SERVERS", "localhost:9092")
-print(f"bootstrap_servers={bootstrap_servers}")
-
 
 def is_known_topic(topic: str) -> bool:
     return topic in TYPES_MAP
 
 
-def consumer_conf(group_id: str = "test-tool-consumer-1", servers: str = bootstrap_servers):
+def consumer_conf(servers: str, group_id: str = "test-tool-consumer-1"):
+    print(f"bootstrap_servers={servers}")
     return {
         "bootstrap.servers": servers,
         "group.id": group_id,
@@ -36,7 +34,8 @@ def consumer_conf(group_id: str = "test-tool-consumer-1", servers: str = bootstr
     }
 
 
-def producer_conf(servers: str = bootstrap_servers):
+def producer_conf(servers: str):
+    print(f"bootstrap_servers={servers}")
     return {"bootstrap.servers": servers}
 
 
@@ -55,10 +54,8 @@ def protobuf2json(topic: str, message: str):
         return message
 
 
-def produce(conf: dict, topic: str, message: Any) -> None:
-    if not conf:
-        conf = producer_conf()
-
+def produce(servers: str, topic: str, message: Any) -> None:
+    conf = producer_conf(servers)
     producer = Producer(conf)
     producer.produce(
         topic,
@@ -68,7 +65,8 @@ def produce(conf: dict, topic: str, message: Any) -> None:
     producer.flush()
 
 
-def consume(conf: dict, topic: str, duration: int = 3):
+def consume(servers: str, topic: str, duration: int = 3):
+    conf = consumer_conf(servers)
     consumer = Consumer(conf)
     consumer.subscribe([topic])
 
@@ -100,6 +98,8 @@ def consume(conf: dict, topic: str, duration: int = 3):
 
 
 if __name__ == "__main__":
+    bootstrap_servers = os.environ.get("BOOTSTRAP_SERVERS", "localhost:9092")
+
     if len(sys.argv) < 2:
         print(
             """
@@ -119,7 +119,7 @@ if __name__ == "__main__":
             duration = sys.maxsize
 
         topic = sys.argv[2]
-        for _, message in consume(consumer_conf(), topic, duration):
+        for _, message in consume(bootstrap_servers, topic, duration):
             try:
                 print(json_format.MessageToJson(message))
             except DecodeError:
@@ -130,4 +130,4 @@ if __name__ == "__main__":
             json_str = f.read()
             message = json2protobuf(topic, json_str)
             print(f"publishing:...\n{json_format.MessageToJson(message)}")
-            produce(producer_conf(), topic, message)
+            produce(bootstrap_servers, topic, message)

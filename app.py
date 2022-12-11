@@ -14,6 +14,8 @@ app.config["SECRET_KEY"] = os.urandom(32)
 
 bootstrap = Bootstrap5(app)
 
+bootstrap_servers = os.environ.get("BOOTSTRAP_SERVERS", "localhost:9092")
+
 
 class PublishForm(FlaskForm):
     topic = SelectField("Topic", choices=TYPES_MAP.keys())
@@ -52,7 +54,7 @@ def handle_pub():
         payload = request.form["payload"]
         try:
             message = json2protobuf(topic, payload)
-            produce(None, topic, message)
+            produce(bootstrap_servers, topic, message)
             flash(f"message published to topic {topic}", "success")
             return pub_form()
         except ParseError as e:
