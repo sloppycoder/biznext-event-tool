@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Any
 from uuid import uuid4
 
-from confluent_kafka import Consumer, Producer
+from confluent_kafka import TIMESTAMP_NOT_AVAILABLE, Consumer, Producer
 from google.protobuf import json_format
 from google.protobuf.message import DecodeError
 
@@ -85,8 +85,11 @@ def consume(servers: str, topic: str, duration: int = 3):
                 print("Consumer error: {}".format(msg.error()))
                 continue
 
-            key, val = msg.key(), msg.value()
-            yield key, protobuf2json(topic, val)
+            key, val, (ts_type, timestamp) = msg.key(), msg.value(), msg.timestamp()
+            if ts_type == TIMESTAMP_NOT_AVAILABLE:
+                timestamp = None
+
+            yield key, protobuf2json(topic, val), timestamp
 
             consumer.store_offsets(msg)
             consumer.commit()
@@ -119,8 +122,10 @@ if __name__ == "__main__":
             duration = sys.maxsize
 
         topic = sys.argv[2]
-        for _, message in consume(bootstrap_servers, topic, duration):
+        for key, message, timestamp in consume(bootstrap_servers, topic, duration):
             try:
+
+                print(f"key====>{key} at {datetime.fromtimestamp(timestamp/1000).isoformat()}")
                 print(json_format.MessageToJson(message))
             except DecodeError:
                 print(f"*** f{message}")
