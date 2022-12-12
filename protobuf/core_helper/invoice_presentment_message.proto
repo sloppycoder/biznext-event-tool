@@ -1,0 +1,101 @@
+syntax = "proto3";
+package th.co.ktb.biznext.channel.protobufsdk.protobuf;
+
+import "google/protobuf/timestamp.proto";
+
+enum InvoicePresentmentStatusProtobuf {
+  NEW = 0;
+  AMEND = 1;
+  REPLACE = 2;
+  CANCEL = 3;
+}
+
+message Decimal {
+  bytes unscaledVal = 1;
+  int32 scale = 2;
+}
+
+message InvoicePresentmentHeaderProtobuf {
+  string userId = 1;
+  string corporateRefId = 2;
+  string companyId = 3;
+  string channel = 4;
+  string instructionType = 5;
+  google.protobuf.Timestamp createdDateTime = 6;
+  string bulkRefId = 7;
+  string eippType = 8;
+}
+
+
+message InvoicePresentmentItemProtobuf {
+  string productType = 1;
+  string productName = 2;
+  string productDescription = 3;
+  string productQty = 4;
+  Decimal totalAmount = 5;
+  Decimal vatRate = 6;
+  Decimal totalAmountExcludeVat = 7;
+  Decimal vatAmount = 8;
+  Decimal discountAmount = 9;
+  string currency = 10;
+  string invoiceDocumentLineItemRefId = 11;
+}
+
+
+message InvoicePresentmentDataProtobuf {
+  string invoiceDocumentItemRefId = 1;
+  string eippDocumentRefId = 2;
+  string sellerTraderId = 3;
+  string sellerNameEn = 4;
+  string sellerNameTh = 5;
+  string buyerTraderId = 6;
+  string buyerNameEn = 7;
+  string buyerNameTh = 8;
+  string documentType = 9;
+  string documentNo = 10;
+  string documentDate = 11;
+  string documentDueDate = 12;
+  string currency = 13;
+  Decimal vatRate = 14;
+  Decimal totalAmount = 15;
+  Decimal totalAmountExcludeVat = 16;
+  Decimal vatAmount = 17;
+  Decimal totalEarnestMoneyAmount = 18;
+  string paymentTerm = 19;
+  string paymentTermNameEn = 20;
+  string paymentTermNameTh = 21;
+  string purchaseNo = 22;
+  string purposeCode = 23;
+  string purposeCodeNameEn = 24;
+  string purposeCodeNameTh = 25;
+  string purposeDetail = 26;
+  string documentDetail = 27;
+  string remarks = 28;
+  string referenceDocumentNo = 29;
+  string referenceDocumentDate = 30;
+  Decimal originalDocumentAmount = 31;
+  Decimal lineTotalAmount = 32;
+  Decimal differentSaleInfoAmount = 33;
+  InvoicePresentmentStatusProtobuf status = 34;
+  string addressLine1 = 35;
+  string addressLine2 = 36;
+  string addressLine3 = 37;
+  string subdistrictId = 38;
+  string subdistrictNameEn = 39;
+  string subdistrictNameTh = 40;
+  string districtId = 41;
+  string districtNameEn = 42;
+  string districtNameTh = 43;
+  string provinceId = 44;
+  string provinceNameEn = 45;
+  string provinceNameTh = 46;
+  string postalCode = 47;
+  string buyerEmail = 48;
+  string buyerMobileNo = 49;
+  repeated InvoicePresentmentItemProtobuf items = 50;
+}
+
+message InvoicePresentmentMessageProtobuf {
+  InvoicePresentmentHeaderProtobuf header = 1;
+  InvoicePresentmentDataProtobuf data = 2;
+}

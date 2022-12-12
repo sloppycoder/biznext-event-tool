@@ -11,11 +11,13 @@ from google.protobuf.message import DecodeError
 from models.core_helper.instruction_command_pb2 import InstructionCommand
 from models.core_helper.instruction_status_executor_pb2 import InstructionStatusExecutor
 from models.core_helper.instruction_status_update_pb2 import InstructionStatusUpdate
+from models.core_helper.invoice_presentment_message_pb2 import InvoicePresentmentMessageProtobuf
 
 TYPES_MAP = {
     "instruction.command": InstructionCommand,
     "instruction.status.executor": InstructionStatusExecutor,
     "instruction.status.update": InstructionStatusUpdate,
+    "stream.eipp-engine.presentment.submission.entry": InvoicePresentmentMessageProtobuf,
 }
 
 
