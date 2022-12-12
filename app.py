@@ -20,7 +20,7 @@ bootstrap_servers = os.environ.get("BOOTSTRAP_SERVERS", "localhost:9092")
 class PublishForm(FlaskForm):
     topic = SelectField("Topic", choices=TYPES_MAP.keys())
     payload = StringField("Message (in JSON)", widget=TextArea())
-    sample = SubmitField("Get Sample")
+    sample = SubmitField("Get")
     submit = SubmitField("Publish")
 
 
