@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form, render_form_row, render_field %}
+
+{% block content %}
+    <form action={{ url_for("handle_sub") }} method="post">
+        <div class="row mb-3">
+            <div class="col-sm-9">
+                {{ render_field(form.topic) }}
+            </div>
+            <div class="col-sm-3">
+                <div class="row">
+                    <label class="form-label" for="topic">Get messages</label>
+                </div>
+                <div class="row">
+                    {{ render_field(form.submit) }}
+                </div>
+            </div>
+        </div
+        {{ render_field(form.messages, rows=30) }}
+    </form>
+{% endblock %}
