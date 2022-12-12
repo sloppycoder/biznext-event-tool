@@ -127,7 +127,9 @@ if __name__ == "__main__":
                 print(f"key====>{key} at {datetime.fromtimestamp(timestamp/1000).isoformat()}")
                 print(json_format.MessageToJson(message))
             except DecodeError:
-                print(f"*** f{message}")
+                print(f"*** {message}")
+            except AttributeError:
+                print(f"*** {message}")
     else:
         topic = sys.argv[1]
         with open(sys.argv[2], "r") as f:
