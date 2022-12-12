@@ -1,3 +1,4 @@
+import logging
 import os
 
 from flask import Flask, flash, render_template, request
@@ -9,12 +10,14 @@ from wtforms.widgets import TextArea
 
 from kafka import TYPES_MAP, json2protobuf, produce
 
+URL_PREFIX = "/bet"
+bootstrap_servers = os.environ.get("BOOTSTRAP_SERVERS", "localhost:9092")
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(32)
-
 bootstrap = Bootstrap5(app)
-
-bootstrap_servers = os.environ.get("BOOTSTRAP_SERVERS", "localhost:9092")
+log = app.logger
+log.setLevel(logging.INFO)
 
 
 class PublishForm(FlaskForm):
@@ -35,16 +38,14 @@ def read_static_file(filename: str) -> str:
         return f.read()
 
 
-@app.route("/")
-@app.route("/pub")
+@app.route(URL_PREFIX + "/")
+@app.route(URL_PREFIX + "/pub")
 def publish_page():
     return pub_form()
 
 
-@app.route("/pub", methods=["POST"])
+@app.route(URL_PREFIX + "/pub", methods=["POST"])
 def handle_pub():
-    print(request.form)
-
     form_keys = request.form.keys()
     if "sample" in form_keys:
         sample_payload = read_static_file(request.form["topic"] + ".json")
@@ -53,10 +54,16 @@ def handle_pub():
         topic = request.form["topic"]
         payload = request.form["payload"]
         try:
+            log.info(f"publishing to {topic} on {bootstrap_servers}")
             message = json2protobuf(topic, payload)
-            produce(bootstrap_servers, topic, message)
-            flash(f"message published to topic {topic}", "success")
-            return pub_form()
+            ret = produce(bootstrap_servers, topic, message)
+            if ret <= 0:
+                log.info(f"published to {topic} on {bootstrap_servers}")
+                flash(f"message published to topic {topic}", "success")
+                return pub_form()
+            else:
+                log.info(f"producer.flus() return {ret}")
+                flash(f"producer.flus() return {ret}", "danger")
         except ParseError as e:
             flash(f"Error: {e}", "danger")
             return pub_form(payload)

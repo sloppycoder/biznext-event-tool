@@ -54,7 +54,7 @@ def protobuf2json(topic: str, message: str):
         return message
 
 
-def produce(servers: str, topic: str, message: Any) -> None:
+def produce(servers: str, topic: str, message: Any, timeout=3.0) -> int:
     conf = producer_conf(servers)
     producer = Producer(conf)
     producer.produce(
@@ -62,7 +62,7 @@ def produce(servers: str, topic: str, message: Any) -> None:
         key=str(uuid4()),
         value=message.SerializeToString(),
     )
-    producer.flush()
+    return producer.flush(timeout)
 
 
 def consume(servers: str, topic: str, duration: int = 3):
@@ -124,7 +124,6 @@ if __name__ == "__main__":
         topic = sys.argv[2]
         for key, message, timestamp in consume(bootstrap_servers, topic, duration):
             try:
-
                 print(f"key====>{key} at {datetime.fromtimestamp(timestamp/1000).isoformat()}")
                 print(json_format.MessageToJson(message))
             except DecodeError:
@@ -135,4 +134,5 @@ if __name__ == "__main__":
             json_str = f.read()
             message = json2protobuf(topic, json_str)
             print(f"publishing:...\n{json_format.MessageToJson(message)}")
-            produce(bootstrap_servers, topic, message)
+            if (produce(bootstrap_servers, topic, message)) > 0:
+                print("producer.flush() failed")
