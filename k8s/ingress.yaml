@@ -1,0 +1,18 @@
+# tested with K3S with Traefik ingress controller
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bn-event-tool
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: bn-event-tool
+            port:
+              number: 5000
