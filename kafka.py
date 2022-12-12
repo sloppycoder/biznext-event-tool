@@ -38,7 +38,7 @@ def consumer_conf(servers: str, group_id: str = "test-tool-consumer-1"):
 
 def producer_conf(servers: str):
     print(f"bootstrap_servers={servers}")
-    return {"bootstrap.servers": servers}
+    return {"bootstrap.servers": servers, "topic.acks": 1}
 
 
 def json2protobuf(topic: str, json_str: str):
