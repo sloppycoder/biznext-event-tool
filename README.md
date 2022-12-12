@@ -30,9 +30,6 @@ python kafka.py consume instruction.command
 ```
 python app.py
 
-# POST a local JSON file to API that publishes the content to the specified topic
-curl -X POST -H "content-type:applicaiton/json" http://localhost:5000/pub/instruction.command -d@static/instruction.command.json
-
 ```
 
 ## Notes for development
