@@ -52,7 +52,7 @@ def protobuf2json(topic: str, message: str):
         obj = TYPES_MAP[topic]()
         obj.ParseFromString(message)
         return obj
-    except KeyError:
+    except (DecodeError, KeyError):
         return message
 
 
@@ -128,8 +128,6 @@ if __name__ == "__main__":
             try:
                 print(f"key====>{key} at {datetime.fromtimestamp(timestamp/1000).isoformat()}")
                 print(json_format.MessageToJson(message))
-            except DecodeError:
-                print(f"*** {message}")
             except AttributeError:
                 print(f"*** {message}")
     else:

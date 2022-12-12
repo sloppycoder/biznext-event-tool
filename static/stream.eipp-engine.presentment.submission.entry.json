@@ -1,0 +1,98 @@
+{
+  "header": {
+    "userId": "c3f74cd9-6a40-4345-9245-2a1a6e2e3e36",
+    "corporateRefId": "4f45b0ac-901e-4ddd-9035-f3f627e48f44",
+    "companyId": "ALOHA00019",
+    "channel": "BN",
+    "instructionType": "EIPP_PROMPTBIZ_INVOICE_CREATION",
+    "createdDateTime": "2022-12-12T14:58:01.399781Z",
+    "eippType": "P"
+  },
+  "data": {
+    "invoiceDocumentItemRefId": "315f7004-7fee-46b1-9fc7-5b64ae910120",
+    "sellerTraderId": "012345678901500002",
+    "sellerNameEn": "Company A",
+    "sellerNameTh": "Company A",
+    "buyerTraderId": "012345678901500002",
+    "buyerNameEn": "Company A",
+    "buyerNameTh": "Company A",
+    "documentType": "81",
+    "documentNo": "dummy123",
+    "documentDate": "2022-01-06",
+    "currency": "THB",
+    "vatRate": {
+      "unscaledVal": "A/M=",
+      "scale": 2
+    },
+    "totalAmount": {
+      "unscaledVal": "D0MI",
+      "scale": 2
+    },
+    "totalAmountExcludeVat": {
+      "unscaledVal": "D0Ns",
+      "scale": 2
+    },
+    "vatAmount": {
+      "unscaledVal": "D0Kk",
+      "scale": 2
+    },
+    "referenceDocumentNo": "800",
+    "originalDocumentAmount": {
+      "unscaledVal": "AYcE",
+      "scale": 2
+    },
+    "lineTotalAmount": {
+      "unscaledVal": "AYdo",
+      "scale": 2
+    },
+    "differentSaleInfoAmount": {
+      "unscaledVal": "nA==",
+      "scale": 2
+    },
+    "addressLine1": "a1",
+    "addressLine2": "a2",
+    "addressLine3": "a3",
+    "subdistrictId": "1600",
+    "subdistrictNameEn": "Kut Pla Duk",
+    "subdistrictNameTh": "\u0e15\u0e33\u0e1a\u0e25\u0e01\u0e38\u0e14\u0e1b\u0e25\u0e32\u0e14\u0e38\u0e01",
+    "districtId": "01",
+    "districtNameEn": "Mueang Amnat Charoen",
+    "districtNameTh": "\u0e2d\u0e33\u0e40\u0e20\u0e2d\u0e40\u0e21\u0e37\u0e2d\u0e07\u0e2d\u0e33\u0e19\u0e32\u0e08\u0e40\u0e08\u0e23\u0e34\u0e0d",
+    "provinceId": "37",
+    "provinceNameEn": "Amnat Charoen",
+    "provinceNameTh": "\u0e2d\u0e33\u0e19\u0e32\u0e08\u0e40\u0e08\u0e23\u0e34\u0e0d",
+    "postalCode": "12345",
+    "buyerEmail": "buyer@gmail.com,buyer@gmail.com",
+    "buyerMobileNo": "1234567890,1234567890",
+    "items": [
+      {
+        "productType": "01",
+        "productName": "New Product",
+        "productDescription": "free product",
+        "productQty": "1001",
+        "totalAmount": {
+          "unscaledVal": "EKTw",
+          "scale": 2
+        },
+        "vatRate": {
+          "unscaledVal": "A/M=",
+          "scale": 2
+        },
+        "totalAmountExcludeVat": {
+          "unscaledVal": "EMxk",
+          "scale": 2
+        },
+        "vatAmount": {
+          "unscaledVal": "AYqI",
+          "scale": 2
+        },
+        "discountAmount": {
+          "unscaledVal": "D0T8",
+          "scale": 2
+        },
+        "currency": "THB",
+        "invoiceDocumentLineItemRefId": "6e0e4cfc-f977-47bb-8e7d-9d5c14803a3b"
+      }
+    ]
+  }
+}
