@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
-{% from 'bootstrap5/form.html' import render_form, render_field, render_messages %}
+{% from 'bootstrap5/form.html' import render_form, render_form_row, render_field %}
 
 {% block content %}
     <form action={{ url_for("handle_pub") }} method="post">
         {{ render_field(form.topic) }}
+        {{ render_field(form.sample, class="btn-secondary") }}
         {{ render_field(form.payload, rows=20) }}
         <div class="row">
             <div class="col-sm-3">
                 {{ render_field(form.submit) }}
             </div>
             <div class="col-sm-3">
-                {{ render_field(form.sample, class="btn-secondary") }}
             </div>
         </div>
     </form>
