@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: bn-event-tool
-        image: sloppycoder/bn-event-tool:0.1.0
+        image: sloppycoder/bn-event-tool:0.1.1
         env:
         - name: BOOTSTRAP_SERVERS
           value: host.docker.internal:9092

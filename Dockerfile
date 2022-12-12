@@ -1,4 +1,4 @@
-FROM python:3.10-buster as base
+FROM python:3.10-bullseye as base
 FROM base as builder
 
 run apt-get update && apt-get install -y \
