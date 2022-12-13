@@ -12,6 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
+      - name: Echo print values
+        run: echo "${GITHUB_REF_NAME} - ${{ env.GITHUB_REF_NAME }} - "
+        shell: bash
+
       - name: Login to docker hub
         uses: actions-hub/docker/login@master
         env:
@@ -19,9 +23,9 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASS }}
 
       - name: Build container image
-        run: docker build -t docker.io/sloppycoder/bn-event-tool:${{ env.GITHUB_REF_NAME }} .
+        run: docker build -t docker.io/sloppycoder/bn-event-tool:${GITHUB_REF_NAME} .
 
       - name: Push container image
         uses: actions-hub/docker@master
         with:
-          args: push docker.io/sloppycoder/bn-event-tool:${{ env.GITHUB_REF_NAME }} .
+          args: push docker.io/sloppycoder/bn-event-tool:${GITHUB_REF_NAME} .
