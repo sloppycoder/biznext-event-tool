@@ -3,12 +3,12 @@ Tools to publish and view messages in Kafka topics used by BizNext application.
 
 ## build container image
 ```
-docker build -t sloppycoder/bn-event-tool:0.1.1 .
+docker build -t ghcr.io/sloppycoder/biznext-event-tool:0.1.3 .
 
-# use the following command on M1 Mac
-docker buildx build --platform linux/amd64 -t sloppycoder/bn-event-tool:0.1.1 .
+# use the following command on M1 Mac with Docker desktop or Rancher Desktop
+docker buildx build --platform linux/amd64 -t ghcr.io/sloppycoder/biznext-event-tool:0.1.3 .
 
-docker push  sloppycoder/bn-event-tool:0.1.1
+docker push  ghcr.io/sloppycoder/biznext-event-tool:0.1.3
 ```
 
 ## run kafka script locally
