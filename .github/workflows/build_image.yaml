@@ -15,7 +15,7 @@ jobs:
       - name: Login to docker hub
         uses: actions-hub/docker/login@master
         env:
-          DOCKER_USERNAME: ${{ sloppycoder }}
+          DOCKER_USERNAME: sloppycoder
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASS }}
 
       - name: Build container image
