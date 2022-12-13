@@ -86,21 +86,18 @@ def sub_form(group_id, messages: str = ""):
 
     resp = make_response(render_template("sub.html", form=form))
     resp.set_cookie(COOKIE_NAME, group_id)
+    log.info(f"sub_form: group_id={group_id}")
     return resp
 
 
 @app.route(URL_PREFIX + "/sub")
 def subscribe_page():
-    group_id = consumer_group_id(request)
-    log.info(f"group_id={group_id}")
-    return sub_form(group_id)
+    return sub_form(consumer_group_id(request))
 
 
 @app.route(URL_PREFIX + "/sub", methods=["POST"])
 def handle_sub():
     group_id = consumer_group_id(request)
-    log.info(f"group_id={group_id}")
-
     topic, messages = request.form["topic"], ""
     for _, msg, timestamp in consume(bootstrap_servers, topic, group_id, 5):
         messages += f"=== at {datetime.fromtimestamp(timestamp/1000).isoformat()} ===>\n"

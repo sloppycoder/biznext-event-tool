@@ -116,8 +116,7 @@ if __name__ == "__main__":
         sys.exit(-1)
 
     if sys.argv[1] == "consume":
-        # listen on the topic for 30 by default
-        # unless -f is specified
+        # listen on the topic for 30 by default, unless -f is specified
         duration = 30
         if len(sys.argv) > 3 and sys.argv[3] == "-f":
             duration = sys.maxsize
@@ -135,5 +134,4 @@ if __name__ == "__main__":
             json_str = f.read()
             message = json2protobuf(topic, json_str)
             print(f"publishing:...\n{json_format.MessageToJson(message)}")
-            if (produce(bootstrap_servers, topic, message)) > 0:
-                print("producer.flush() failed")
+            produce(bootstrap_servers, topic, message)
