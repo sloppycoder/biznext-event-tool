@@ -11,23 +11,19 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - name: Echo print values
-        run: echo $GITHUB_REF_NAME - ${IMAGE_TAG}
-        shell: bash
-
       - name: Login to github registry
         uses: actions-hub/docker/login@master
         env:
           DOCKER_USERNAME: sloppycoder
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASS }}
-          DOCKER_REGISTRY_URL: docker.io
+          DOCKER_PASSWORD: ${{ secrets.USER_TOKEN }}
+          DOCKER_REGISTRY_URL: ghcr.io
 
       - name: Build :tag
         if: success()
-        run: docker build -t docker.io/sloppycoder/bn-event-tool:${IMAGE_TAG} .
+        run: docker build -t ghcr.io/${{ github.repository }}:${IMAGE_TAG} .
 
       - name: Push to docker hub :tag
         if: success()
         uses: actions-hub/docker@master
         with:
-          args: push docker.io/sloppycoder/bn-event-tool:${IMAGE_TAG}
+          args: push ghcr.io/${{ github.repository }}:${IMAGE_TAG} .
