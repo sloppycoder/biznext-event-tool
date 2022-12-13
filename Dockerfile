@@ -1,5 +1,4 @@
-FROM python:3.10-bullseye as base
-FROM base as builder
+FROM python:3.10-bullseye as builder
 
 run apt-get update && apt-get install -y \
     build-essential \
@@ -8,7 +7,8 @@ run apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --root="/install" -r requirements.txt
 
-FROM base
+# runtime
+FROM python:3.10-slim-bullseye
 LABEL org.opencontainers.image.source https://github.com/sloppycoder/biznext_event_tool
 COPY --from=builder /install /
 COPY . .
