@@ -6,6 +6,7 @@ __pycache__
 *.egg-info
 .env*
 .python-version
+x
 
 # test reports
 test-report/
