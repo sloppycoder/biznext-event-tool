@@ -16,17 +16,16 @@ jobs:
         run: echo $GITHUB_REF_NAME - ${GITHUB_REF_NAME}
         shell: bash
 
-      - name: Build container image
-        uses: actions-hub/docker@master
-        run: docker build -t docker.io/sloppycoder/bn-event-tool:${GITHUB_REF_NAME} .
-
       - name: Login to docker hub
         uses: actions-hub/docker/login@master
         env:
           DOCKER_USERNAME: sloppycoder
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASS }}
 
+      - name: Build container image
+        uses: actions-hub/docker@master
+        run: docker build -t docker.io/sloppycoder/bn-event-tool:$GITHUB_REF_NAME .
+
       - name: Push container image
         uses: actions-hub/docker@master
-        with:
-          args: push docker.io/sloppycoder/bn-event-tool:${GITHUB_REF_NAME} .
+        run: docker push docker.io/sloppycoder/bn-event-tool:$GITHUB_REF_NAME .
