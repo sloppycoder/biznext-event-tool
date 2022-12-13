@@ -14,16 +14,16 @@ jobs:
       - name: Login to github registry
         uses: actions-hub/docker/login@master
         env:
-          DOCKER_USERNAME: sloppycoder
+          DOCKER_USERNAME: ${{ github.actor }}
           DOCKER_PASSWORD: ${{ secrets.USER_TOKEN }}
           DOCKER_REGISTRY_URL: ghcr.io
 
       - name: Build :tag
         if: success()
-        run: docker build -t ghcr.io/${{ github.repository }}:${IMAGE_TAG} .
+        run: docker build -t ghcr.io/${{ github.repository }}:${{ github.ref_name }} .
 
-      - name: Push to docker hub :tag
+      - name: Push to image registry :tag
         if: success()
         uses: actions-hub/docker@master
         with:
-          args: push ghcr.io/${{ github.repository }}:${IMAGE_TAG} .
+          args: push ghcr.io/${{ github.repository }}:${{ github.ref_name }} .
