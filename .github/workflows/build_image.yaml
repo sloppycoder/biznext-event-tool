@@ -26,4 +26,4 @@ jobs:
         if: success()
         uses: actions-hub/docker@master
         with:
-          args: push ghcr.io/${{ github.repository }}:${{ github.ref_name }} .
+          args: push ghcr.io/${{ github.repository }}:${{ github.ref_name }}
