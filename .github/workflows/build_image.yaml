@@ -1,31 +1,33 @@
-name: build and publish container image
+# name: build and publish container image
 
-on:
-  push:
-    tags:        
-      - 0.*
+on: 
+   push:
+     tags:
+       - '0.*'
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
+  github:
+    runs-on: ubuntu-latest    
     steps:
       - uses: actions/checkout@v1
 
       - name: Echo print values
-        run: echo $GITHUB_REF_NAME - ${GITHUB_REF_NAME}
+        run: echo $GITHUB_REF_NAME - ${IMAGE_TAG}
         shell: bash
 
-      - name: Login to docker hub
+      - name: Login to github registry
         uses: actions-hub/docker/login@master
         env:
           DOCKER_USERNAME: sloppycoder
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASS }}
+          DOCKER_REGISTRY_URL: docker.io
 
-      - name: Build container image
-        uses: actions-hub/docker@master
-        run: docker build -t docker.io/sloppycoder/bn-event-tool:$GITHUB_REF_NAME .
+      - name: Build :tag
+        if: success()
+        run: docker build -t docker.io/sloppycoder/bn-event-tool:${IMAGE_TAG} .
 
-      - name: Push container image
+      - name: Push to docker hub :tag
+        if: success()
         uses: actions-hub/docker@master
-        run: docker push docker.io/sloppycoder/bn-event-tool:$GITHUB_REF_NAME .
+        with:
+          args: push docker.io/sloppycoder/bn-event-tool:${IMAGE_TAG}
