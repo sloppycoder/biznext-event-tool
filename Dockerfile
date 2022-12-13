@@ -1,3 +1,5 @@
+LABEL org.opencontainers.image.source https://github.com/sloppycoder/biznext_event_tool
+
 FROM python:3.10-bullseye as builder
 
 run apt-get update && apt-get install -y \
@@ -9,7 +11,6 @@ RUN pip install --root="/install" -r requirements.txt
 
 # runtime
 FROM python:3.10-slim-bullseye
-LABEL org.opencontainers.image.source https://github.com/sloppycoder/biznext_event_tool
 COPY --from=builder /install /
 COPY . .
 
