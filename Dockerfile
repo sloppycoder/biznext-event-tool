@@ -9,6 +9,7 @@ COPY requirements.txt .
 RUN pip install --root="/install" -r requirements.txt
 
 FROM base
+LABEL org.opencontainers.image.source https://github.com/sloppycoder/biznext_event_tool
 COPY --from=builder /install /
 COPY . .
 
