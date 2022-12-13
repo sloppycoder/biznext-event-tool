@@ -25,7 +25,7 @@ def is_known_topic(topic: str) -> bool:
     return topic in TYPES_MAP
 
 
-def consumer_conf(servers: str, group_id: str = "test-tool-consumer-1"):
+def consumer_conf(servers: str, group_id: str):
     print(f"bootstrap_servers={servers}")
     return {
         "bootstrap.servers": servers,
@@ -57,8 +57,7 @@ def protobuf2json(topic: str, message: str):
 
 
 def produce(servers: str, topic: str, message: Any, timeout=3.0) -> int:
-    conf = producer_conf(servers)
-    producer = Producer(conf)
+    producer = Producer(producer_conf(servers))
     producer.produce(
         topic,
         key=str(uuid4()),
@@ -67,8 +66,8 @@ def produce(servers: str, topic: str, message: Any, timeout=3.0) -> int:
     return producer.flush(timeout)
 
 
-def consume(servers: str, topic: str, duration: int = 3):
-    conf = consumer_conf(servers)
+def consume(servers: str, topic: str, group_id="biznext-event-tool", duration: int = 3):
+    conf = consumer_conf(servers, group_id)
     consumer = Consumer(conf)
     consumer.subscribe([topic])
 
