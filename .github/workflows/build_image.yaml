@@ -1,0 +1,30 @@
+name: build and publish container image
+
+on:
+  push:
+    tags:        
+      - 0.*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Build container image
+        uses: actions/docker/cli@master
+        with:
+          args: build -t docker.io/sloppycoder/bn-event-tool:{{ GITHUB_REF_NAME }} .
+
+      - name: Login to registry
+        uses: actions/docker/login@master
+        env:
+          DOCKER_USERNAME: sloppycoder
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASS }}
+          DOCKER_REGISTRY_URL: "docker.io"
+
+      - name: Push container image
+        uses: actions/docker/cli@master
+        with:
+          args: push docker.io/sloppycoder/bn-test-tool:{{ GITHUB_REF_NAME }}
