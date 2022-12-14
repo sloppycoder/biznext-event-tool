@@ -36,9 +36,10 @@ flake8-isort = "^4.1.1"
 flake8-variables-names = "^0.0.5"
 isort = "^5.10.1"
 pre-commit = "^2.19.0"
-mypy = "^0.961"
+mypy = "0.991"
 types-setuptools = "^57.4.8"
 types-toml = "^0.10.3"
+types-protobuf = "^4.21.0"
 
 [tool.isort]
 profile = "black"

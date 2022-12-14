@@ -2,7 +2,7 @@ import logging
 import os
 from datetime import datetime
 
-from flask import Flask, flash, make_response, render_template, request
+from flask import Flask, Response, flash, make_response, render_template, request
 from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
 from google.protobuf import json_format
@@ -10,7 +10,7 @@ from google.protobuf.json_format import ParseError
 from wtforms.fields import SelectField, StringField, SubmitField
 from wtforms.widgets import TextArea
 
-from kafka import TYPES_MAP, consume, json2protobuf, produce
+from kafka import consume, json2protobuf, known_topics, produce
 
 URL_PREFIX = "/bet"
 COOKIE_NAME = "biznext-bet-group-id"
@@ -24,14 +24,14 @@ log.setLevel(logging.INFO)
 
 
 class PublishForm(FlaskForm):
-    topic = SelectField("Topic", choices=TYPES_MAP.keys())
+    topic = SelectField("Topic", choices=known_topics())
     payload = StringField("Message (in JSON)", widget=TextArea())
     sample = SubmitField("Get")
     submit = SubmitField("Publish")
 
 
 class SubscribeForm(FlaskForm):
-    topic = SelectField("Topic", choices=TYPES_MAP.keys())
+    topic = SelectField("Topic", choices=known_topics)
     messages = StringField("Messages (in JSON)", widget=TextArea(), render_kw={"readonly": True})
     submit = SubmitField("Subscribe")
 
@@ -64,8 +64,8 @@ def handle_pub():
         payload = request.form["payload"]
         try:
             log.info(f"publishing to {topic} on {bootstrap_servers}")
-            message = json2protobuf(topic, payload)
-            produce(bootstrap_servers, topic, message)
+            message_pb = json2protobuf(topic, payload)
+            produce(bootstrap_servers, topic, message_pb)
             log.info(f"published to {topic} on {bootstrap_servers}")
             flash(f"message published to topic {topic}", "success")
             return pub_form()
@@ -91,7 +91,7 @@ def sub_form(group_id, messages: str = ""):
 
 
 @app.route(URL_PREFIX + "/sub")
-def subscribe_page():
+def subscribe_page() -> Response:
     return sub_form(consumer_group_id(request))
 
 
