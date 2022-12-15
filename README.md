@@ -69,4 +69,12 @@ docker buildx build --platform linux/amd64 -t ghcr.io/<user>/biznext-event-tool:
 # push the image to registry
 docker push  ghcr.io/<user>/biznext-event-tool:0.1.4
 
+# export poetry dependencies to requirements.txt
+# required when building container images
+poetry export --without-hashes --format=requirements.txt > requirements.txt
+
+# export poetry dev dependencies to requirements-dev.txt
+# required when running linting and unit tests on CI servers
+poetry export --dev  --without-hashes --format=requirements.txt > requirements-dev.txt
+
 ```
