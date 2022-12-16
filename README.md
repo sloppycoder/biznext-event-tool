@@ -61,13 +61,13 @@ ytest --cov=. -s -v
 protoc -I ./protobuf/core_helper --python_out=./models/core_helper ./protobuf/core_helper/*.proto
 
 # to build container image
-docker build -t ghcr.io/<user>/biznext-event-tool:0.1.4 .
+docker build -t ghcr.io/<user>/biznext-event-tool:0.1.5 .
 
 # to build on M1 Mac
-docker buildx build --platform linux/amd64 -t ghcr.io/<user>/biznext-event-tool:0.1.4 .
+docker buildx build --platform linux/amd64 -t ghcr.io/<user>/biznext-event-tool:0.1.5 .
 
 # push the image to registry
-docker push  ghcr.io/<user>/biznext-event-tool:0.1.4
+docker push  ghcr.io/<user>/biznext-event-tool:0.1.5
 
 # export poetry dependencies to requirements.txt
 # required when building container images
