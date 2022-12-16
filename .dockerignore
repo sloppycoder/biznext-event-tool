@@ -1,3 +1,7 @@
-.venv
-.git
-
+.*
+tests/
+k8s/
+pyproject.toml
+poetry.lock
+requirements*.txt
+x
