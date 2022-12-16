@@ -3,5 +3,6 @@ tests/
 k8s/
 pyproject.toml
 poetry.lock
-requirements*.txt
+source.bat
+README.md
 x
