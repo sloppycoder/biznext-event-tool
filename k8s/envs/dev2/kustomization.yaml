@@ -1,0 +1,28 @@
+kind: Kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+
+resources:
+  - ../../base
+  - istio.yaml
+
+namespace: biznext-channel-dev2
+
+images:
+  - name: ghcr.io/sloppycoder/biznext-event-tool
+    newName: harborvayu.whitezone.krungthai:8443/biznext-channel-dev/biznext-event-tool
+    newTag: 0.1.4
+
+patchesJson6902:
+  - target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: biznext-event-tool
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/env/0
+        value: { "name": "BOOTSTRAP_SERVERS", "value": "100.127.193.103:19093" }
+      - op: add
+        path: /spec/template/spec/imagePullSecrets
+        value:
+          name: "regcred"

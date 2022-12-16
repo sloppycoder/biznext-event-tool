@@ -1,0 +1,22 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: biznext-event-tool-virtual-service
+spec:
+  gateways:
+  - default/dev-gateway
+  hosts:
+  - biznext-event-tool.gtbdev-vayucloud.krungthai
+  http:
+  - match:
+    - uri:
+        prefix: /
+    name: biznext-event-tool
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: biznext-event-tool
+        port:
+          number: 5000
