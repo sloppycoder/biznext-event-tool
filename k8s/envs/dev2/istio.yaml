@@ -7,14 +7,12 @@ spec:
   gateways:
   - default/dev-gateway
   hosts:
-  - biznext-event-tool.gtbdev-vayucloud.krungthai
+  - ingress-biznext-admin.gtbdev-vayucloud.krungthai
   http:
   - match:
     - uri:
-        prefix: /
+        prefix: /bet
     name: biznext-event-tool
-    rewrite:
-      uri: /
     route:
     - destination:
         host: biznext-event-tool

@@ -24,5 +24,4 @@ patchesJson6902:
         value: { "name": "BOOTSTRAP_SERVERS", "value": "100.127.193.103:19093" }
       - op: add
         path: /spec/template/spec/imagePullSecrets
-        value:
-          name: "regcred"
+        value: [{ name: image-pull-secret }]
