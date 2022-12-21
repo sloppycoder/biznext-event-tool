@@ -20,6 +20,9 @@ pytest_junit.xml
 # intellj
 .idea/
 
+# Jetbrains Fleet
+.fleet/
+
 # AWS SAM CLI
 .aws-sam/
 

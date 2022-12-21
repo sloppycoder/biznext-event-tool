@@ -33,6 +33,14 @@ jobs:
         run: |
           pytest -v -s
 
+      - name: Set up QEMU
++        uses: docker/setup-qemu-action@v2
++        with:
++          platforms: 'linux/amd64,linux/arm64'
+
+       - name: Set up Docker Buildx
+         uses: docker/setup-buildx-action@v2
+
       - name: Login to github registry
         if: success()
         uses: actions-hub/docker/login@master
@@ -41,12 +49,8 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.USER_TOKEN }}
           DOCKER_REGISTRY_URL: ghcr.io
 
-      - name: Build :tag
-        if: success()
-        run: docker build -t ghcr.io/${{ github.repository }}:${{ github.ref_name }} .
-
-      - name: Push to image registry :tag
-        if: success()
-        uses: actions-hub/docker@master
-        with:
-          args: push ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+      - name: Build and push
+         uses: docker/build-push-action@v3
+         with:
+           push: true
+           tags: ghcr.io/${{ github.repository }}:${{ github.ref_name }}
