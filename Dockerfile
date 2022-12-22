@@ -8,13 +8,13 @@ run apt-get update && apt-get install -y \
     librdkafka1 \
     librdkafka-dev
 
-COPY requirements.txt .
+COPY requirements.txt* .
 RUN \ 
   case ${TARGETPLATFORM} in \
-    "linux/amd64")  REQ_FILE="requirementments.txt"  ;; \
-    "linux/arm64") REQ_FILE="requirementments.txt.arm64"  ;; \
+    "linux/amd64")  REQ_FILE="requirements.txt"  ;; \
+    "linux/arm64") REQ_FILE="requirements.txt.arm64"  ;; \
   esac && \
-  pip install --root="/install" -r REQ_FILE
+  pip install --root="/install" -r $REQ_FILE
 
 # runtime
 FROM python:3.10-slim-bullseye
