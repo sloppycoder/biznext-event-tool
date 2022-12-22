@@ -3,7 +3,7 @@ FROM python:3.10-bullseye as builder
 LABEL org.opencontainers.image.source https://github.com/sloppycoder/biznext_event_tool
 ARG TARGETPLATFORM
 
-run apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y \
     build-essential \
     librdkafka1 \
     librdkafka-dev
@@ -19,6 +19,12 @@ RUN \
 # runtime
 FROM python:3.10-slim-bullseye
 LABEL org.opencontainers.image.source https://github.com/sloppycoder/biznext_event_tool
+ARG TARGETPLATFORM
+
+RUN \
+  if [ "${TARGETPLATFORM}" = "linux/arm64" ]; then \
+    apt-get update && apt-get install -y librdkafka1 ; \
+  fi  
 USER 3001:3001
 
 
