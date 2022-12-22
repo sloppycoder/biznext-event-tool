@@ -78,3 +78,6 @@ poetry export --without-hashes --format=requirements.txt > requirements.txt
 poetry export --dev  --without-hashes --format=requirements.txt > requirements-dev.txt
 
 ```
+
+## Known issues
+The confluent-kafka wheel for arm64 doesn't come with any binary modules, so installing the packge on the platform requires compiling the source code. Since the debian bulleye only ships with librdkafka 1.6.0, an confluent-kafka module is picky of librdkafka version, a temporarily workaround is to download confluent-kafka version only for arm64 image build, only in requirements.txt.arm64

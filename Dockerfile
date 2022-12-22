@@ -1,13 +1,20 @@
 
 FROM python:3.10-bullseye as builder
 LABEL org.opencontainers.image.source https://github.com/sloppycoder/biznext_event_tool
+ARG TARGETPLATFORM
 
 run apt-get update && apt-get install -y \
     build-essential \
+    librdkafka1 \
     librdkafka-dev
 
 COPY requirements.txt .
-RUN pip install --root="/install" -r requirements.txt
+RUN \ 
+  case ${TARGETPLATFORM} in \
+    "linux/amd64")  REQ_FILE="requirementments.txt"  ;; \
+    "linux/arm64") REQ_FILE="requirementments.txt.arm64"  ;; \
+  esac && \
+  pip install --root="/install" -r REQ_FILE
 
 # runtime
 FROM python:3.10-slim-bullseye
