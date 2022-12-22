@@ -2,12 +2,12 @@ import logging
 import os
 from datetime import datetime
 
-from flask import Flask, Response, flash, make_response, redirect, render_template, request, url_for
+from flask import Flask, flash, make_response, redirect, render_template, request, url_for
 from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
 from google.protobuf import json_format
 from google.protobuf.json_format import ParseError
-from wtforms.fields import HiddenField, SelectField, StringField, SubmitField
+from wtforms.fields import BooleanField, SelectField, StringField, SubmitField
 from wtforms.widgets import TextArea
 
 import kafka
@@ -33,7 +33,7 @@ class PublishForm(FlaskForm):
 class SubscribeForm(FlaskForm):
     topic = SelectField("Topic", choices=kafka.known_topics)
     messages = StringField("Messages (in JSON)", widget=TextArea(), render_kw={"readonly": True})
-    duration = HiddenField("2.0")
+    reset_group_id = BooleanField("Start from beginning")
     submit = SubmitField("Subscribe")
 
 
@@ -42,7 +42,8 @@ def static_file_content(filename: str) -> str:
         return f.read()
 
 
-def pub_form(payload: str = ""):
+@app.route(URL_PREFIX + "/pub")
+def pub_page(payload: str = ""):
     form = PublishForm()
     form.payload.data = payload
     return render_template("pub.html", form=form)
@@ -50,12 +51,7 @@ def pub_form(payload: str = ""):
 
 @app.route(URL_PREFIX + "/")
 def root():
-    return redirect(url_for("publish_page"))
-
-
-@app.route(URL_PREFIX + "/pub")
-def publish_page():
-    return pub_form()
+    return redirect(url_for("pub_page"))
 
 
 @app.route(URL_PREFIX + "/pub", methods=["POST"])
@@ -63,49 +59,57 @@ def handle_pub():
     form_keys = request.form.keys()
     if "sample" in form_keys:
         sample = static_file_content(request.form["topic"] + ".json")
-        return pub_form(sample)
+        return pub_page(sample)
     elif "submit" in form_keys:
         topic = request.form["topic"]
         payload = request.form["payload"]
         try:
             log.info(f"publishing to {topic} on {bootstrap_servers}")
+
             message_pb = kafka.json2protobuf(topic, payload)
-            kafka.produce(bootstrap_servers, topic, message_pb)
-            log.info(f"published to {topic} on {bootstrap_servers}")
-            flash(f"message published to topic {topic}", "success")
-            return pub_form()
+            if kafka.produce(bootstrap_servers, topic, message_pb) == 0:
+                log.info(f"published to {topic} on {bootstrap_servers}")
+                flash(f"message published to topic {topic}", "success")
+            else:
+                log.info(f"unable to publish to {topic} on {bootstrap_servers}")
+                flash(f"message falied to publish to topic {topic}", "danger")
+
+            return pub_page()
         except ParseError as e:
             flash(f"Error: {e}", "danger")
-            return pub_form(payload)
+            return pub_page(payload)
     else:
         return None, 404
 
 
-def consumer_group_id(request):
-    return request.cookies.get(COOKIE_NAME) or f"bet-group-{int(datetime.now().timestamp())}"
-
-
-def sub_form(group_id, messages: str = ""):
-    form = SubscribeForm()
-    form.messages.data = messages
-
-    resp = make_response(render_template("sub.html", form=form))
-    resp.set_cookie(COOKIE_NAME, group_id)
-    log.info(f"sub_form: group_id={group_id}")
-    return resp
+def new_group_id():
+    return f"bet-group-{int(datetime.now().timestamp())}"
 
 
 @app.route(URL_PREFIX + "/sub")
-def subscribe_page() -> Response:
-    return sub_form(consumer_group_id(request))
+def sub_page(messages: str = "", group_id: str = ""):
+    form = SubscribeForm()
+    form.messages.data = messages
+    form.reset_group_id.data = False
+
+    resp = make_response(render_template("sub.html", form=form))
+    if group_id != "":
+        resp.set_cookie(COOKIE_NAME, group_id)
+        log.info(f"sub_page: group_id={group_id}")
+
+    return resp
 
 
 @app.route(URL_PREFIX + "/sub", methods=["POST"])
 def handle_sub():
-    group_id = consumer_group_id(request)
-    topic, duration, messages = request.form["topic"], request.form["duration"], ""
+    topic, reset_group_id = request.form["topic"], "reset_group_id" in request.form
 
-    for _, msg, timestamp in kafka.consume(bootstrap_servers, topic, group_id, float(duration)):
+    group_id = request.cookies.get(COOKIE_NAME)
+    if group_id is None or reset_group_id:
+        group_id = new_group_id()
+
+    messages = ""
+    for _, msg, timestamp in kafka.consume(bootstrap_servers, topic, group_id, 2.0):
         messages += f"=== {type(msg)} at {timestamp.isoformat()} ===>\n"
         try:
             messages += json_format.MessageToJson(msg)
@@ -113,7 +117,7 @@ def handle_sub():
             messages += str(msg)
         messages += "\n\n"
 
-    return sub_form(group_id, messages)
+    return sub_page(messages, group_id)
 
 
 if __name__ == "__main__":
