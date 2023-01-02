@@ -1,5 +1,6 @@
 FROM python:3.10-slim-bullseye
-LABEL org.opencontainers.image.source https://github.com/sloppycoder/biznext_event_tool "BizNext event tool"
+LABEL org.opencontainers.image.source https://github.com/sloppycoder/biznext_event_tool 
+LABEL org.opencontainers.image.description "BizNext event tool"
 ARG TARGETPLATFORM
 
 COPY . .
