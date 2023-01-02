@@ -10,7 +10,7 @@ namespace: biznext-channel-dev2
 images:
   - name: ghcr.io/sloppycoder/biznext-event-tool
     newName: harborvayu.whitezone.krungthai:8443/biznext-channel-dev/biznext-event-tool
-    newTag: 0.1.6
+    newTag: 0.1.7
 
 patchesJson6902:
   - target:

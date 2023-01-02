@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: biznext-event-tool
-        image: ghcr.io/sloppycoder/biznext-event-tool:0.1.6
+        image: ghcr.io/sloppycoder/biznext-event-tool:0.1.7
         env:
         - name: BOOTSTRAP_SERVERS
           value: host.docker.internal:9092
