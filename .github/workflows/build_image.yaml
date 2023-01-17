@@ -2,8 +2,10 @@
 
 on:
   push:
+    branches:
+      - develop
     tags:
-      - "0.*"
+      - v[0-9].*
 
 jobs:
   python-test-and-build-image:
@@ -33,6 +35,15 @@ jobs:
         run: |
           pytest -v -s
 
+      - name: set image metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+            images: ghcr.io/${{ github.repository }}
+            tags: |
+              type=ref,event=tag
+              type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'develop') }}
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
@@ -51,5 +62,15 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           platforms: "linux/amd64,linux/arm64"
-          push: true
-          tags: ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Delete old images
+        uses: actions/delete-package-versions@v4
+        with:
+          package-name: ${{ github.repository }}
+          package-type: container
+          min-versions-to-keep: 3
+          ignore-versions: latest
+          token: ${{ secrets.USER_TOKEN }}
