@@ -43,6 +43,8 @@ jobs:
             tags: |
               type=ref,event=tag
               type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'develop') }}
+            flavor: |
+              latest=false
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -72,6 +74,6 @@ jobs:
           owner: ${{ github.repository_owner }}
           package-name: ${{ github.event.repository.name }}
           package-type: container
-          min-versions-to-keep: 3
+          min-versions-to-keep: 5
           ignore-versions: latest
           token: ${{ secrets.USER_TOKEN }}
