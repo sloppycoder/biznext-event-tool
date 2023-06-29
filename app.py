@@ -7,6 +7,7 @@ from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
 from google.protobuf import json_format
 from google.protobuf.json_format import ParseError
+from werkzeug.middleware.proxy_fix import ProxyFix
 from wtforms.fields import BooleanField, SelectField, StringField, SubmitField
 from wtforms.widgets import TextArea
 
@@ -17,7 +18,12 @@ COOKIE_NAME = "biznext-bet-group-id"
 bootstrap_servers = os.environ.get("BOOTSTRAP_SERVERS", "localhost:9092")
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.urandom(32)
+secret_key = os.environ.get("SECRET_KEY")
+app.config["SECRET_KEY"] = secret_key if secret_key else os.urandom(32)
+if os.environ.get("KUBERNETES_SERVICE_HOST"):
+    print("running in kubernetes, using proxy fix")
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
+
 bootstrap = Bootstrap5(app)
 log = app.logger
 log.setLevel(logging.INFO)

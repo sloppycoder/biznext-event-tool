@@ -48,6 +48,11 @@ src_paths = ["."]
 
 [tool.black]
 line-length = 120
+extend-exclude = '''
+(
+/models/core_helper
+)
+'''
 
 [tool.pytest.ini_options]
 minversion = "6.0"
