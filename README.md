@@ -1,12 +1,12 @@
 # BizNext Event Tool
+
 Tools to publish and view messages in Kafka topics used by BizNext application. Included are a script and simple Web UI that:
 
 1. Use JSON as input to protobuf and publish to a topic
 2. Consume messages from a topic, convert the protobuf messages to JSON
 
-
-
 ### run kafka script locally
+
 ```
 # run kafka script
 export BOOTSTRAP_SERVERS=<your kafka brokers>
@@ -17,14 +17,15 @@ export BOOTSTRAP_SERVERS=<your kafka brokers>
 python kafka.py instruction.command static/instruction.command.json
 
 # liston on the default topic and convert each message received into JSON.
-# by default it will exit after running for 30s. if -f is specified at the 
-# it will run forever, like tail -f 
+# by default it will exit after running for 30s. if -f is specified at the
+# it will run forever, like tail -f
 
-python kafka.py consume instruction.command 
+python kafka.py consume instruction.command
 
 ```
 
 ### run web app locally
+
 ```
 export BOOTSTRAP_SERVERS=<your kafka brokers>
 python app.py
@@ -33,6 +34,7 @@ python app.py
 ```
 
 ## Notes for developer
+
 This project is set up Python project with dev tooling pre-configured
 
 * black
@@ -41,7 +43,8 @@ This project is set up Python project with dev tooling pre-configured
 * mypy
 * VS Code support
 
-To start development, clone the repo and 
+To start development, clone the repo and
+
 ```
 # poetry package manager is required
 
@@ -57,7 +60,7 @@ pytest -s -v
 # unit test with coverage report
 ytest --cov=. -s -v
 
-# compile proto files to python 
+# compile proto files to python
 protoc -I ./protobuf/core_helper --python_out=./models/core_helper ./protobuf/core_helper/*.proto
 
 # to build container image
@@ -78,6 +81,3 @@ poetry export --without-hashes --format=requirements.txt > requirements.txt
 poetry export --dev  --without-hashes --format=requirements.txt > requirements-dev.txt
 
 ```
-
-## Known issues
-The confluent-kafka wheel for arm64 doesn't come with any binary modules, so installing the packge on the platform requires compiling the source code. Since the debian bulleye only ships with librdkafka 1.6.0, an confluent-kafka module is picky of librdkafka version, a temporarily workaround is to download confluent-kafka version only for arm64 image build, only in requirements.txt.arm64
